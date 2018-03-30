@@ -6,23 +6,25 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using SportsStore.Models;
 
 namespace SportsStore
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        IConfigurationRoot Configuration;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IHostingEnvironment env)
+        {
+            Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json").Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IProductRepository, FakeProductRepository>();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:SportsStoreProducts:ConnectionString"]));
+            services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddMvc();
         }
 
@@ -47,6 +49,7 @@ namespace SportsStore
                     name: "default",
                     template: "{controller=Product}/{action=List}/{id?}");
             });
+            SeedData.EnsurePopulated(app);
         }
     }
 }

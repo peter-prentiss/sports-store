@@ -15,4 +15,7 @@
   <ItemGroup>
     <Folder Include="Views\Product\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="appsettings.config" />
+  </ItemGroup>
 </Project>
