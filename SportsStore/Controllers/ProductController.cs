@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using SportsStore.Models;
 using SportsStore.Models.ViewModels;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace SportsStore.Controllers
 {
     public class ProductController : Controller
@@ -20,13 +18,14 @@ namespace SportsStore.Controllers
             repository = repo;
         }
 
-        public ViewResult List(int page = 1) => View(new ProductListViewModel {
-            Products = repository.Products.OrderBy(p => p.ProductID).Skip((page - 1) * PageSize).Take(PageSize),
+        public ViewResult List(string category, int page = 1) => View(new ProductListViewModel {
+            Products = repository.Products.Where(p => category == null || p.Category == category).OrderBy(p => p.ProductID).Skip((page - 1) * PageSize).Take(PageSize),
             PagingInfor = new PagingInfor {
                 CurrentPage = page,
                 ItemsPerPage = PageSize,
                 TotalItems = repository.Products.Count()
-            }
+            },
+            CurrentCategory = category
         });
     }
 }

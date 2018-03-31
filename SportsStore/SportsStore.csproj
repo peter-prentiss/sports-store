@@ -16,6 +16,7 @@
     <Folder Include="Views\Product\" />
     <Folder Include="Models\ViewModels\" />
     <Folder Include="Infrastructure\" />
+    <Folder Include="Components\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="appsettings.config" />
